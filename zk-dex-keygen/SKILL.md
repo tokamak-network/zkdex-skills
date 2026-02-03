@@ -1,18 +1,18 @@
 # SKILL.md - zk-dex-keygen
 
-## 설명
+## Description
 
-BabyJubJub 곡선을 기반으로 ZK DEX용 키 페어를 생성하는 스킬입니다. `@noble/curves` 라이브러리를 사용하여 WASM 의존성을 피하고 순수 JavaScript로 구현되어 있습니다. 안정성과 경량화를 강조합니다.
+A skill for generating key pairs for ZK DEX based on the BabyJubJub curve. Uses the `@noble/curves` library to avoid WASM dependencies and is implemented in pure JavaScript. Emphasizes stability and lightweight design.
 
-## 사용법
+## Usage
 
 ```javascript
 const { generateKeypair, normalizePrivateKey } = require('@zkdex/skills/zk-dex-keygen');
 
-// 키 페어 생성
+// Generate key pair
 const { sk, pk } = generateKeypair();
 
-// 비밀키 정규화
+// Normalize secret key
 const normalizedSk = normalizePrivateKey(sk);
 ```
 
@@ -21,14 +21,14 @@ const normalizedSk = normalizePrivateKey(sk);
 ### `generateKeypair()`
 
 - **Returns:** `{ sk: Uint8Array, pk: [bigint, bigint] }`
-- 랜덤한 비밀키와 공개키 쌍을 생성합니다.
+- Generates a random secret key and public key pair.
 
 ### `normalizePrivateKey(key)`
 - **Parameters:** `key: Uint8Array | bigint`
 - **Returns:** `Uint8Array`
-- 다양한 형식의 비밀키를 정규화된 `Uint8Array`로 변환합니다.
+- Converts secret keys in various formats to a normalized `Uint8Array`.
 
-## 의존성
+## Dependencies
 
 - `@noble/curves`
 - `@noble/hashes`

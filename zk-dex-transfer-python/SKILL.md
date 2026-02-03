@@ -1,24 +1,24 @@
 # SKILL.md - zk-dex-transfer-python
 
-## 설명
+## Description
 
-이 스킬은 Python 기반의 `zk-dex-transfer` 모듈입니다. `zkdex-utils` 라이브러리를 활용하여 zk-DEx에서 자산을 송금하기 위한 트랜스퍼 노트를 생성합니다.
+This skill is a Python-based `zk-dex-transfer` module. It generates transfer notes for asset transfers in zk-DEx, leveraging the `zkdex-utils` library.
 
-## 의존성
+## Dependencies
 
-- `zkdex-utils` (npm 패키지)
+- `zkdex-utils` (npm package)
 - Python 3.x
 - `web3.py`
 
-## 사용법
+## Usage
 
-1. `generate_transfer.py` 스크립트를 실행합니다.
-2. `generate_transfer_note()` 함수가 송금 정보를 기반으로 트랜스퍼 노트를 반환합니다.
+1. Run the `generate_transfer.py` script.
+2. The `generate_transfer_note()` function returns a transfer note based on the transfer information.
 
-## 구조
+## Structure
 
-- `generate_transfer.py`: 트랜스퍼 노트 생성 로직을 포함한 메인 스크립트.
+- `generate_transfer.py`: Main script containing the transfer note generation logic.
 
-## 참고
+## Note
 
-이 스킬은 `zkdex-utils` 패키지의 `Note` 및 `Account` 클래스를 활용하여, 기존의 zk-DEx 프로토콜과 호환되는 노트를 생성합니다.
+This skill uses the `Note` and `Account` classes from the `zkdex-utils` package to generate notes compatible with the existing zk-DEx protocol.
