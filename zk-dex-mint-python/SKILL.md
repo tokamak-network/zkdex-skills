@@ -2,23 +2,45 @@
 
 ## Description
 
-This skill is a Python-based `zk-dex-mint` module. It generates mint notes for issuing new assets in zk-DEx, leveraging the `zkdex-utils` library.
+Python-based mint note generation for zk-DEx. Creates a 7-input Poseidon note hash compatible with the circom mint circuit. Uses the shared `zkdex_lib` library (pure Python, no npm/web3 dependency).
 
 ## Dependencies
 
-- `zkdex-utils` (npm package)
+- `zkdex_lib/` (shared library: Poseidon hash, Note class)
 - Python 3.x
-- `web3.py`
 
 ## Usage
 
-1. Run the `generate_mint.py` script.
-2. The `generate_mint_note()` function returns a mint note based on the minting information.
+```bash
+python generate_mint.py \
+  --owner-pk-x <hex> \
+  --owner-pk-y <hex> \
+  --value <amount> \
+  --token-type <hex>     # optional, default: 0x0 (ETH)
+  --salt <hex>           # optional, auto-generated if omitted
+```
+
+## Output Format
+
+```json
+{
+  "noteHash": "0x05fa764f...",
+  "noteRaw": {
+    "owner0": "0x...",
+    "owner1": "0x...",
+    "value": "0x...",
+    "token": "0x...",
+    "vk0": "0x...",
+    "vk1": "0x...",
+    "salt": "0x..."
+  }
+}
+```
+
+- **noteHash**: `Poseidon(owner0, owner1, value, token, vk0, vk1, salt)` — 64 hex chars
+- **noteRaw**: All 7 note fields as 0x-prefixed 64-char hex strings
+- Regular note: `owner0=pk.x`, `owner1=pk.y`, `vk0=pk.x`, `vk1=pk.y`
 
 ## Structure
 
-- `generate_mint.py`: Main script containing the mint note generation logic.
-
-## Note
-
-This skill uses the `Note` class from the `zkdex-utils` package to generate notes compatible with the existing zk-DEx protocol.
+- `generate_mint.py`: CLI script for mint note generation

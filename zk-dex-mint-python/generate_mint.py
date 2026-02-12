@@ -1,30 +1,62 @@
-from zkdex_utils import Note, Account
-import web3
+#!/usr/bin/env python3
+"""
+ZK-DEX Mint Note 생성 스크립트.
+
+공개키(pk.x, pk.y)와 값(value), 토큰 타입으로 민트 노트를 생성하고
+Poseidon 해시를 계산합니다.
+"""
+
+import os
+import sys
+import json
+import argparse
+
+# zkdex_lib import
+_parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _parent_dir not in sys.path:
+    sys.path.insert(0, _parent_dir)
+
+from zkdex_lib.note import Note
 
 
-def generate_mint_note(owner_zk_address, value, token_type="0x0"):
+def generate_mint_note(owner_pk_x, owner_pk_y, value, token_type=0, salt=None):
     """
-    민팅을 위한 민트 노트를 생성합니다.
+    민트 노트를 생성합니다.
+
+    Regular note: owner0=pk.x, owner1=pk.y, vk0=pk.x, vk1=pk.y
+
+    Args:
+        owner_pk_x: 수신자 공개키 x좌표 (int 또는 hex str)
+        owner_pk_y: 수신자 공개키 y좌표 (int 또는 hex str)
+        value: 민팅 금액 (int 또는 hex str)
+        token_type: 토큰 타입 (int 또는 hex str, 기본 0 = ETH)
+        salt: 솔트 (int 또는 hex str, None이면 자동 생성)
+
+    Returns:
+        Note 객체
     """
-    # 민트 노트 생성
-    # owner는 자산을 받을 수신자의 zk 주소
-    mint_note = Note(
-        owner=owner_zk_address,
-        value=value,
-        type=token_type,
-        viewKey="0x01", # 기본 뷰 키
-        salt=web3.Web3.soliditySha3(['string'], ['mint']).hex() # 고유한 솔트
-    )
-    
-    return mint_note
+    return Note.from_public_key(owner_pk_x, owner_pk_y, value, token_type, salt)
 
 
 if __name__ == "__main__":
-    # 예시: 수신자 주소와 가치로 민트 노트 생성
-    owner_address = "zk2aGHYonwumtLAG7SNKjharksCP3r"
-    value = "1000000000000000000"
-    token_type = "0x0" # 기본 토큰 타입
-    
-    note = generate_mint_note(owner_address, value, token_type)
-    print(f"민트 노트 해시: {note.getNoteHash()}")
-    print(f"민트 노트 Raw: {note.getNoteRaw()}")
+    parser = argparse.ArgumentParser(description="ZK-DEX 민트 노트 생성")
+    parser.add_argument("--owner-pk-x", required=True, help="수신자 공개키 x (hex)")
+    parser.add_argument("--owner-pk-y", required=True, help="수신자 공개키 y (hex)")
+    parser.add_argument("--value", required=True, help="민팅 금액 (int 또는 hex)")
+    parser.add_argument("--token-type", default="0x0", help="토큰 타입 (기본: 0x0 = ETH)")
+    parser.add_argument("--salt", default=None, help="솔트 (hex, 미지정 시 자동 생성)")
+    args = parser.parse_args()
+
+    note = generate_mint_note(
+        args.owner_pk_x,
+        args.owner_pk_y,
+        args.value,
+        args.token_type,
+        args.salt,
+    )
+
+    result = {
+        "noteHash": note.hash(),
+        "noteRaw": note.to_dict(),
+    }
+    print(json.dumps(result, indent=2))

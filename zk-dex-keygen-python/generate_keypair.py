@@ -1,10 +1,17 @@
 from sapling_jubjub import Point, Fq, Fr, JUBJUB_COFACTOR, r_j
 import os
+import sys
 import hashlib
 import json
 import time
 import argparse
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+# zkdex_lib를 import할 수 있도록 경로 추가
+_parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _parent_dir not in sys.path:
+    sys.path.insert(0, _parent_dir)
+from zkdex_lib.account import derive_address as _poseidon_derive_address
 
 # BabyJubJub 곡선의 Base Point (B)
 BASE_POINT = Point(
@@ -37,14 +44,10 @@ def generate_keypair():
 
 def derive_address(pk):
     """
-    공개키에서 address를 파생합니다 (zkdex-utils Account.js 참조).
-    sha256(pk.x_hex + pk.y_hex)의 마지막 20바이트(40 hex chars).
+    공개키에서 address를 파생합니다 (circomlibBabyJub.js pubKeyToAddress 호환).
+    address = truncate_to_160_bits(Poseidon(pk.x, pk.y))
     """
-    pk_x_hex = format(pk.u.s, '064x')
-    pk_y_hex = format(pk.v.s, '064x')
-    concat_hex = pk_x_hex + pk_y_hex
-    hash_bytes = hashlib.sha256(bytes.fromhex(concat_hex)).hexdigest()
-    return hash_bytes[24:]  # 마지막 40 hex chars (20 bytes)
+    return _poseidon_derive_address(pk.u.s, pk.v.s)
 
 
 def encrypt_keystore(sk_int, password):

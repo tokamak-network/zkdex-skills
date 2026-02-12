@@ -2,23 +2,46 @@
 
 ## Description
 
-This skill is a Python-based `zk-dex-transfer` module. It generates transfer notes for asset transfers in zk-DEx, leveraging the `zkdex-utils` library.
+Python-based transfer note generation for zk-DEx. Creates a 7-input Poseidon note hash compatible with the circom transfer circuit. The sender's secret key is used for ownership proof, and the recipient's public key becomes the note owner. Uses the shared `zkdex_lib` library (pure Python, no npm/web3 dependency).
 
 ## Dependencies
 
-- `zkdex-utils` (npm package)
+- `zkdex_lib/` (shared library: Poseidon hash, Note, Account)
 - Python 3.x
-- `web3.py`
 
 ## Usage
 
-1. Run the `generate_transfer.py` script.
-2. The `generate_transfer_note()` function returns a transfer note based on the transfer information.
+```bash
+python generate_transfer.py \
+  --sk <sender_secret_key> \
+  --to-pk-x <hex> \
+  --to-pk-y <hex> \
+  --value <amount> \
+  --token-type <hex>     # optional, default: 0x0 (ETH)
+  --salt <hex>           # optional, auto-generated if omitted
+```
+
+## Output Format
+
+```json
+{
+  "noteHash": "0x05fa764f...",
+  "noteRaw": {
+    "owner0": "0x...",
+    "owner1": "0x...",
+    "value": "0x...",
+    "token": "0x...",
+    "vk0": "0x...",
+    "vk1": "0x...",
+    "salt": "0x..."
+  },
+  "sender": {
+    "address": "c63db0d1...",
+    "publicKey": { "x": "0x...", "y": "0x..." }
+  }
+}
+```
 
 ## Structure
 
-- `generate_transfer.py`: Main script containing the transfer note generation logic.
-
-## Note
-
-This skill uses the `Note` and `Account` classes from the `zkdex-utils` package to generate notes compatible with the existing zk-DEx protocol.
+- `generate_transfer.py`: CLI script for transfer note generation
