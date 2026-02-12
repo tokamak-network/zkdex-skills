@@ -46,6 +46,7 @@ if __name__ == "__main__":
     parser.add_argument("--value", required=True, help="환전 금액 (int 또는 hex)")
     parser.add_argument("--token-type", default="0x0", help="토큰 타입 (기본: 0x0 = ETH)")
     parser.add_argument("--salt", default=None, help="솔트 (hex, 미지정 시 자동 생성)")
+    parser.add_argument("--proof", action="store_true", help="ZK proof 생성")
     args = parser.parse_args()
 
     result = generate_redeem_note(
@@ -69,4 +70,11 @@ if __name__ == "__main__":
             }
         }
     }
+
+    if args.proof:
+        from zkdex_lib.proof import generate_redeem_proof
+        sk_int = int(args.sk, 16) if args.sk.startswith("0x") else int(args.sk)
+        proof_result = generate_redeem_proof(note, sk_int)
+        output["proof"] = proof_result
+
     print(json.dumps(output, indent=2))

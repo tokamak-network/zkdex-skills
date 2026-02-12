@@ -1,6 +1,9 @@
-# SKILL.md - zk-dex-keygen-python
+---
+name: zk-dex-keygen-python
+description: "Generate BabyJubJub keypair for zk-DEx. Run `python generate_keypair.py -p <password>` to create sk/pk with Poseidon-based address and encrypted keystore JSON."
+---
 
-## Description
+# zk-dex-keygen-python
 
 Python-based BabyJubJub keypair generation for zk-DEx. Generates keypairs using the BabyJubJub curve and exports them in encrypted keystore JSON format. Address derivation uses **Poseidon hash** (circomlibjs-compatible), matching the on-chain circuit implementation.
 

@@ -1,8 +1,11 @@
-# SKILL.md - zk-dex-glossary
+---
+name: zk-dex-glossary
+description: "Glossary of core terms used in Tokamak zk-DEx: Note, Account, BabyJubJub, Poseidon hash, ZKDIP, zk Address, etc."
+---
 
-## Description
+# zk-dex-glossary
 
-This skill is a glossary of core terms used in Tokamak's zk-DEx project. It is based on the `ZKDIPs` documents and the `zkdex-utils` source code.
+Glossary of core terms used in Tokamak's zk-DEx project. Based on the ZKDIPs documents and zkdex-utils source code.
 
 ## Term Definitions
 
